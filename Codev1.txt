@@ -1,0 +1,28 @@
+from openpyxl import load_workbook
+from datetime import datetime, timedelta
+
+# Load Excel file
+FILE_PATH = "D:\School\Scripting and Automation\FinalProject\assignments.xlsx"
+wb = load_workbook(FILE_PATH)
+sheet = wb.active
+
+# Current time
+now = datetime.now()
+
+# Time window (24 hours)
+alert_window = timedelta(hours=24)
+
+for row in sheet.iter_rows(min_row=2, values_only=False):
+    assignment_cell = row[0]   # Column A
+    deadline_cell = row[1]     # Column B
+    status_cell = row[2]       # Column C
+
+    assignment = assignment_cell.value
+    deadline = deadline_cell.value
+    status = status_cell.value
+
+    if deadline and status != "Completed":
+        time_left = deadline - now
+
+        if timedelta(0) <= time_left <= alert_window:
+            print(f"ALERT: assignment due soon!")
